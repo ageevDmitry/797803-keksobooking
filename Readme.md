@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Агеев](https://up.htmlacademy.ru/javascript/16/user/797803).
-* Наставник: `Неизвестно`.
+* Наставник: Дмитрий Лялин.
 
 ---
 
