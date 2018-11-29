@@ -1,32 +1,61 @@
 'use strict';
 
-var PIC_AVATAR = ['01', '02', '03', '04', '05', '06', '07', '08'];
-
-var cloneArr = [];
+var picAvatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
+var offerTitles = [
+  'Большая уютная квартира',
+  'Маленькая неуютная квартира',
+  'Огромный прекрасный дворец',
+  'Маленький ужасный дворец',
+  'Красивый гостевой домик',
+  'Некрасивый негостеприимный домик',
+  'Уютное бунгало далеко от моря',
+  'Неуютное бунгало по колено в воде'
+];
+var offerTypes = ['palace', 'flat', 'house', 'bungalo'];
+var checkTimes = ['12:00', '13:00', '14:00'];
+var photos = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
 
 var apartments = [];
 
-var getApartmentParameter = function (arr) {
-  var k = Math.round(-0.5 + Math.random() * (8));
-  if (cloneArr.length === 0) {
-    cloneArr.push(arr[k]);
-    return arr[k];
-  } else {
-    outer:
-    for (var p = 0; p < cloneArr.length; p++) {
-      var k = Math.round(-0.5 + Math.random() * (8));
-      if (arr[k] === cloneArr[p]) {
-        break outer;
-      } else {
-        cloneArr.push(arr[k]);
-        return arr[k];
-      }
-    }
-  } //Здесь могло бы быть еще много вариантов данной функции, но они все не работают
+var getRandomIndex = function (length) {
+  return Math.floor(Math.random() * (length));
 };
 
-var getLocationApartment = function (min, max) {
-  var coordinate = Math.round(min - 0.5 + Math.random() * (max - min + 1));
+var compareRandom = function (a, b) {
+  return Math.random() - 0.5;
+};
+
+var getOfferTypeInRussian = function (type) {
+  if (type === 'palace') {
+    return 'Дворец';
+  } else if (type === 'flat') {
+    return 'Квартира';
+  } else if (type === 'house') {
+    return 'Дом';
+  }
+  return 'Бунгало';
+};
+
+var getStringParameter = function (arr, method) {
+  if (method === 'noRepeat') {
+    var randomIndexNoRepeat = getRandomIndex(arr.length);
+    var cloneArr = arr.slice(0);
+    arr.splice(randomIndexNoRepeat, 1);
+    return cloneArr[randomIndexNoRepeat];
+  } else if (method === 'randomOrder') {
+    return arr.sort(compareRandom);
+  } else {
+    var randomIndex = getRandomIndex(arr.length);
+    return arr[randomIndex];
+  }
+};
+
+var getNumberParameter = function (min, max) {
+  var coordinate = Math.floor(min + Math.random() * (max + 1 - min));
   return coordinate;
 };
 
@@ -35,32 +64,28 @@ var getApartment = function () {
   return {
 
     author: {
-      avatar: 'img/avatars/user' + getApartmentParameter(PIC_AVATAR) + '.png'
+      avatar: 'img/avatars/user' + getStringParameter(picAvatars, 'noRepeat') + '.png'
     },
 
     offer: {
-      title: 'Большая уютная квартира',
-      address: '600, 350',
-      price: 1000,
-      type: 'palace',
-      rooms: 1,
-      guests: 2,
-      checkin: '12:00',
-      checkout: '14:00',
+      title: getStringParameter(offerTitles, 'noRepeat'),
+      address: getNumberParameter(270, 1100) + ', ' + getNumberParameter(130, 630),
+      price: getNumberParameter(1000, 1000000),
+      type: getStringParameter(offerTypes),
+      rooms: getNumberParameter(1, 5),
+      guests: getNumberParameter(2, 7),
+      checkin: getStringParameter(checkTimes),
+      checkout: getStringParameter(checkTimes),
       features: [
         'wifi', 'dishwasher', 'parking', 'washer', 'elevator'
       ],
-      description: 'Какое-то описание',
-      photos: [
-        'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-        'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-        'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-      ]
+      description: '',
+      photos: getStringParameter(photos, 'randomOrder')
     },
 
     location: {
-      x: getLocationApartment(270, 1100),
-      y: getLocationApartment(130, 630)
+      x: getNumberParameter(270, 1100),
+      y: getNumberParameter(130, 630)
     }
   };
 };
@@ -69,39 +94,6 @@ for (var i = 0; i < 8; i++) {
   apartments.push(getApartment());
 }
 
-var apartment = [
-
-  {
-    author: {
-      avatar: 'img/avatars/user04.png'
-    },
-
-    offer: {
-      title: 'Большая уютная квартира',
-      address: '600, 350',
-      price: 1000,
-      type: 'palace',
-      rooms: 1,
-      guests: 2,
-      checkin: '12:00',
-      checkout: '14:00',
-      features: [
-        'wifi', 'dishwasher', 'parking', 'washer', 'elevator'
-      ],
-      description: 'Какая-то дичь',
-      photos: [
-        'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-        'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-        'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-      ]
-    },
-
-    location: {
-      x: 500,
-      y: 200
-    }
-  }
-];
 
 var userDialog = document.querySelector('.map');
 userDialog.classList.remove('map--faded');
@@ -140,9 +132,9 @@ var renderMap = function () {
   mapElement.querySelector('.popup__title').textContent = apartments[0].offer.title;
   mapElement.querySelector('.popup__text--address').textContent = apartments[0].offer.address;
   mapElement.querySelector('.popup__text--price').textContent = apartments[0].offer.price + '&#x20bd';
-  mapElement.querySelector('.popup__type').textContent = apartments[0].offer.type;
-  mapElement.querySelector('.popup__text--capacity').textContent = apartments[0].offer.rooms + ' комнаты для ' + apartment[0].offer.guests + ' гостей';
-  mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments[0].offer.checkin + ', выезд до ' + apartment[0].offer.checkout;
+  mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(apartments[0].offer.type);
+  mapElement.querySelector('.popup__text--capacity').textContent = apartments[0].offer.rooms + ' комнаты для ' + apartments[0].offer.guests + ' гостей';
+  mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments[0].offer.checkin + ', выезд до ' + apartments[0].offer.checkout;
   mapElement.querySelector('.popup__description').textContent = apartments[0].offer.description;
   // mapElement.querySelector('.popup__features').textContent = apartment[0].offer.features;
   mapElement.querySelector('.popup__photo').setAttribute('src', apartments[0].offer.photos[0]);
