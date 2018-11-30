@@ -25,7 +25,7 @@ var getRandomIndex = function (length) {
   return Math.floor(Math.random() * (length));
 };
 
-var compareRandom = function (a, b) {
+var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
@@ -119,7 +119,6 @@ for (var j = 0; j < apartments.length; j++) {
 }
 similarPicElement.appendChild(fragmentPic);
 
-
 var parentMapElement = document.querySelector('.map');
 var referenceMapElement = document.querySelector('.map__filters-container');
 var similarMapTemplate = document.querySelector('#card').content;
@@ -131,15 +130,32 @@ var renderMap = function () {
   mapElement.querySelector('.popup__avatar').setAttribute('src', apartments[0].author.avatar);
   mapElement.querySelector('.popup__title').textContent = apartments[0].offer.title;
   mapElement.querySelector('.popup__text--address').textContent = apartments[0].offer.address;
-  mapElement.querySelector('.popup__text--price').textContent = apartments[0].offer.price + '&#x20bd';
+  mapElement.querySelector('.popup__text--price').innerHTML = apartments[0].offer.price + '&#x20bd';
   mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(apartments[0].offer.type);
   mapElement.querySelector('.popup__text--capacity').textContent = apartments[0].offer.rooms + ' комнаты для ' + apartments[0].offer.guests + ' гостей';
   mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments[0].offer.checkin + ', выезд до ' + apartments[0].offer.checkout;
   mapElement.querySelector('.popup__description').textContent = apartments[0].offer.description;
   // mapElement.querySelector('.popup__features').textContent = apartment[0].offer.features;
-  mapElement.querySelector('.popup__photo').setAttribute('src', apartments[0].offer.photos[0]);
+
+  var parentPhotoElement = mapElement.querySelector('.popup__photos');
+  var similarPhotoTemplate = mapElement.querySelector('.popup__photo');
+
+  var fragmentPhoto = document.createDocumentFragment();
+
+  var renderPhoto = function () {
+    var photoElement = similarPhotoTemplate.cloneNode(true);
+    photoElement.querySelector('.popup__photo').setAttribute('src', apartments[0].author.avatar[0]);
+    return photoElement;
+  };
+
+  for (var k = 0; k < 3; k++) {
+    fragmentPhoto.appendChild(renderPhoto(apartments));
+  }
+
+  parentPhotoElement.appendChild(fragmentPhoto);
 
   return mapElement;
+
 };
 
 var fragmentMap = document.createDocumentFragment();
