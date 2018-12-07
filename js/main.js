@@ -13,6 +13,8 @@ var APARTMENT_ROOMS_MAX = 5;
 var APARTMENT_GUESTS_MIN = 2;
 var APARTMENT_GUESTS_MAX = 7;
 var RUBLE = '&#x20bd';
+var PIC_WIDTH = 40;
+var PIC_HEIGHT = 40;
 
 var apartmentOfferTitles = [
   'Большая уютная квартира',
@@ -130,7 +132,7 @@ var renderPic = function (apartment) {
 
   var picElement = similarPicTemplate.cloneNode(true);
 
-  picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - 20) + 'px; top: ' + (apartment.location.y - 40) + 'px;');
+  picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y - PIC_HEIGHT) + 'px;');
   picElement.querySelector('img').setAttribute('src', apartment.author.avatar);
   picElement.querySelector('img').setAttribute('alt', apartment.offer.title);
 
@@ -151,9 +153,32 @@ var similarMapTemplate = document.querySelector('#card').content;
 
 var renderMap = function () {
 
-  var renderPhoto = function (popupPhoto, apartment, k) {
-    popupPhoto.setAttribute('src', apartment.offer.photos[k]);
-    var photo = popupPhoto.cloneNode(true);
+  var mapElement = similarMapTemplate.cloneNode(true);
+
+  mapElement.querySelector('.popup__avatar').setAttribute('src', apartments[0].author.avatar);
+  mapElement.querySelector('.popup__title').textContent = apartments[0].offer.title;
+  mapElement.querySelector('.popup__text--address').textContent = apartments[0].offer.address;
+  mapElement.querySelector('.popup__text--price').innerHTML = apartments[0].offer.price + RUBLE;
+  mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(apartments[0].offer.type);
+  mapElement.querySelector('.popup__text--capacity').textContent = apartments[0].offer.rooms + ' комнаты для ' + apartments[0].offer.guests + ' гостей';
+  mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments[0].offer.checkin + ', выезд до ' + apartments[0].offer.checkout;
+  mapElement.querySelector('.popup__description').textContent = apartments[0].offer.description;
+
+  var parentPhotoElement = mapElement.querySelector('.popup__photos');
+  var popupPhoto = mapElement.querySelector('.popup__photo');
+  parentPhotoElement.removeChild(popupPhoto);
+
+  var parentFeaturesElement = mapElement.querySelector('.popup__features');
+  var popapWifi = mapElement.querySelector('.popup__feature--wifi');
+  var popapDishwasher = mapElement.querySelector('.popup__feature--dishwasher');
+  var popapParking = mapElement.querySelector('.popup__feature--parking');
+  var popapWasher = mapElement.querySelector('.popup__feature--washer');
+  var popapElevator = mapElement.querySelector('.popup__feature--elevator');
+  var popapConditioner = mapElement.querySelector('.popup__feature--conditioner');
+
+  var renderPhoto = function (popupPhotoElement, apartment, k) {
+    popupPhotoElement.setAttribute('src', apartment.offer.photos[k]);
+    var photo = popupPhotoElement.cloneNode(true);
     return photo;
   };
 
@@ -175,32 +200,9 @@ var renderMap = function () {
     return parentFeaturesElement.appendChild(cloneElement.cloneNode(true));
   };
 
-  var mapElement = similarMapTemplate.cloneNode(true);
-
-  mapElement.querySelector('.popup__avatar').setAttribute('src', apartments[0].author.avatar);
-  mapElement.querySelector('.popup__title').textContent = apartments[0].offer.title;
-  mapElement.querySelector('.popup__text--address').textContent = apartments[0].offer.address;
-  mapElement.querySelector('.popup__text--price').innerHTML = apartments[0].offer.price + RUBLE;
-  mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(apartments[0].offer.type);
-  mapElement.querySelector('.popup__text--capacity').textContent = apartments[0].offer.rooms + ' комнаты для ' + apartments[0].offer.guests + ' гостей';
-  mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments[0].offer.checkin + ', выезд до ' + apartments[0].offer.checkout;
-  mapElement.querySelector('.popup__description').textContent = apartments[0].offer.description;
-
-  var parentPhotoElement = mapElement.querySelector('.popup__photos');
-  var popupPhoto = mapElement.querySelector('.popup__photo');
-  parentPhotoElement.removeChild(popupPhoto);
-
   for (var k = 0; k < apartmentPhotos.length; k++) {
     parentPhotoElement.appendChild(renderPhoto(popupPhoto, apartments[0], k));
   }
-
-  var parentFeaturesElement = mapElement.querySelector('.popup__features');
-  var popapWifi = mapElement.querySelector('.popup__feature--wifi');
-  var popapDishwasher = mapElement.querySelector('.popup__feature--dishwasher');
-  var popapParking = mapElement.querySelector('.popup__feature--parking');
-  var popapWasher = mapElement.querySelector('.popup__feature--washer');
-  var popapElevator = mapElement.querySelector('.popup__feature--elevator');
-  var popapConditioner = mapElement.querySelector('.popup__feature--conditioner');
 
   for (var n = NUMBER_OF_FEATURES; n > 0; n--) {
     var childrenFeatures = parentFeaturesElement.children[n - 1];
@@ -215,7 +217,6 @@ var renderMap = function () {
 };
 
 var fragmentMap = document.createDocumentFragment();
-
 
 fragmentMap.appendChild(renderMap(apartments));
 
