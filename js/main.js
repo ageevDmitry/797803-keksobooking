@@ -216,6 +216,7 @@ var renderMap = function () {
 
 var fragmentMap = document.createDocumentFragment();
 
+
 fragmentMap.appendChild(renderMap(apartments));
 
 parentMapElement.insertBefore(fragmentMap, referenceMapElement);
