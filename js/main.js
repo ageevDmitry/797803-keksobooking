@@ -6,6 +6,8 @@ var PIC_COORDINATE_X_MIN = 270;
 var PIC_COORDINATE_X_MAX = 1100;
 var PIC_COORDINATE_Y_MIN = 130;
 var PIC_COORDINATE_Y_MAX = 630;
+var PIC_COORDINATE_Х_DEFAULT = 570;
+var PIC_COORDINATE_Y_DEFAULT = 375;
 var APARTMENT_PRICE_MIN = 1000;
 var APARTMENT_PRICE_MAX = 1000000;
 var APARTMENT_ROOMS_MIN = 1;
@@ -15,7 +17,6 @@ var APARTMENT_GUESTS_MAX = 7;
 var RUBLE = '&#x20bd';
 var PIC_WIDTH = 40;
 var PIC_HEIGHT = 40;
-
 var apartmentOfferTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -26,8 +27,16 @@ var apartmentOfferTitles = [
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'
 ];
-var offerTypes = ['palace', 'flat', 'house', 'bungalo'];
-var checkTimes = ['12:00', '13:00', '14:00', '15:00'];
+var offerTypes = [
+  'palace',
+  'flat',
+  'house',
+  'bungalo'];
+var checkTimes = [
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00'];
 var apartmentfeatures = [
   'wifi',
   'dishwasher',
@@ -122,9 +131,6 @@ for (var i = 0; i < NUMBER_OF_APARTMENTS; i++) {
   apartments.push(getApartment(i));
 }
 
-var userDialog = document.querySelector('.map');
-userDialog.classList.remove('map--faded');
-
 var similarPicElement = document.querySelector('.map__pins');
 var similarPicTemplate = document.querySelector('#pin').content;
 
@@ -144,8 +150,6 @@ var fragmentPic = document.createDocumentFragment();
 for (var j = 0; j < apartments.length; j++) {
   fragmentPic.appendChild(renderPic(apartments[j]));
 }
-
-similarPicElement.appendChild(fragmentPic);
 
 var parentMapElement = document.querySelector('.map');
 var referenceMapElement = document.querySelector('.map__filters-container');
@@ -220,5 +224,46 @@ var fragmentMap = document.createDocumentFragment();
 
 fragmentMap.appendChild(renderMap(apartments));
 
-parentMapElement.insertBefore(fragmentMap, referenceMapElement);
+var mapPinMain = document.querySelector('.map__pin--main');
+var userDialog = document.querySelector('.map');
 
+var adForm = document.querySelector('.ad-form');
+var mapFilters = document.querySelector('.map__filters');
+
+mapPinMain.addEventListener('mouseup', function () {
+  userDialog.classList.remove('map--faded');
+  similarPicElement.appendChild(fragmentPic);
+
+  adForm.classList.remove('ad-form--disabled');
+  adForm.querySelector('#avatar').removeAttribute('disabled');
+  adForm.querySelector('#title').removeAttribute('disabled');
+  adForm.querySelector('#address').removeAttribute('disabled');
+  adForm.querySelector('#type').removeAttribute('disabled');
+  adForm.querySelector('#price').removeAttribute('disabled');
+  adForm.querySelector('#timein').removeAttribute('disabled');
+  adForm.querySelector('#timeout').removeAttribute('disabled');
+  adForm.querySelector('#room_number').removeAttribute('disabled');
+  adForm.querySelector('#capacity').removeAttribute('disabled');
+  adForm.querySelector('#room_number').removeAttribute('disabled');
+  adForm.querySelector('#capacity').removeAttribute('disabled');
+  adForm.querySelector('#description').removeAttribute('disabled');
+  adForm.querySelector('#images').removeAttribute('disabled');
+  adForm.querySelector('.ad-form__element--submit').removeAttribute('disabled');
+  adForm.querySelector('.features').removeAttribute('disabled');
+
+  mapFilters.querySelector('#housing-type').removeAttribute('disabled');
+  mapFilters.querySelector('#housing-price').removeAttribute('disabled');
+  mapFilters.querySelector('#housing-rooms').removeAttribute('disabled');
+  mapFilters.querySelector('#housing-guests').removeAttribute('disabled');
+  mapFilters.querySelector('#housing-features').removeAttribute('disabled');
+
+  adForm.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+});
+
+var a = document.querySelector('.map__pins');
+
+a.addEventListener('click', function () {
+  console.log('УРА!');
+});
+
+// .insertBefore(fragmentMap, referenceMapElement);
