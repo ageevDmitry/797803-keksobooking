@@ -31,12 +31,14 @@ var offerTypes = [
   'palace',
   'flat',
   'house',
-  'bungalo'];
+  'bungalo'
+];
 var checkTimes = [
   '12:00',
   '13:00',
   '14:00',
-  '15:00'];
+  '15:00'
+];
 var apartmentfeatures = [
   'wifi',
   'dishwasher',
@@ -229,41 +231,50 @@ var userDialog = document.querySelector('.map');
 
 var adForm = document.querySelector('.ad-form');
 var mapFilters = document.querySelector('.map__filters');
+var selectors = [
+  '#avatar',
+  '#title',
+  '#address',
+  '#type',
+  '#price',
+  '#timein',
+  '#timeout',
+  '#room_number',
+  '#capacity',
+  '#description',
+  '#images',
+  '#housing-type',
+  '#housing-price',
+  '#housing-rooms',
+  '#housing-guests',
+  '#housing-features'
+];
+
 
 mapPinMain.addEventListener('mouseup', function () {
   userDialog.classList.remove('map--faded');
+
   similarPicElement.appendChild(fragmentPic);
 
   adForm.classList.remove('ad-form--disabled');
-  adForm.querySelector('#avatar').removeAttribute('disabled');
-  adForm.querySelector('#title').removeAttribute('disabled');
-  adForm.querySelector('#address').removeAttribute('disabled');
-  adForm.querySelector('#type').removeAttribute('disabled');
-  adForm.querySelector('#price').removeAttribute('disabled');
-  adForm.querySelector('#timein').removeAttribute('disabled');
-  adForm.querySelector('#timeout').removeAttribute('disabled');
-  adForm.querySelector('#room_number').removeAttribute('disabled');
-  adForm.querySelector('#capacity').removeAttribute('disabled');
-  adForm.querySelector('#room_number').removeAttribute('disabled');
-  adForm.querySelector('#capacity').removeAttribute('disabled');
-  adForm.querySelector('#description').removeAttribute('disabled');
-  adForm.querySelector('#images').removeAttribute('disabled');
   adForm.querySelector('.ad-form__element--submit').removeAttribute('disabled');
   adForm.querySelector('.features').removeAttribute('disabled');
 
-  mapFilters.querySelector('#housing-type').removeAttribute('disabled');
-  mapFilters.querySelector('#housing-price').removeAttribute('disabled');
-  mapFilters.querySelector('#housing-rooms').removeAttribute('disabled');
-  mapFilters.querySelector('#housing-guests').removeAttribute('disabled');
-  mapFilters.querySelector('#housing-features').removeAttribute('disabled');
+  selectors.forEach(function (selector) {
+    document.querySelector(selector).removeAttribute('disabled');
+  });
 
-  adForm.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+  document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
 });
 
-var a = document.querySelector('.map__pins');
+// var a = document.querySelector('.map__pins');
 
-a.addEventListener('click', function () {
-  console.log('УРА!');
-});
+// a.addEventListener('click', function (evt) {
+//  console.log('target: ', evt.target);
+//  console.log('currentTarget: ', evt.currentTarget);
+// });
 
+// 1 event.target - элемент, сгенерировавший событие; (pin)
+// 2 event.currentTarget. - элемент, на котором сработал обработчик события; (map_pins)
+// console
 // .insertBefore(fragmentMap, referenceMapElement);
