@@ -230,7 +230,7 @@ var mapPinMain = document.querySelector('.map__pin--main');
 var userDialog = document.querySelector('.map');
 
 var adForm = document.querySelector('.ad-form');
-var mapFilters = document.querySelector('.map__filters');
+
 var selectors = [
   '#avatar',
   '#title',
@@ -250,6 +250,13 @@ var selectors = [
   '#housing-features'
 ];
 
+document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
+adForm.querySelector('.features').setAttribute('disabled', 'disabled');
+
+selectors.forEach(function (selector) {
+  document.querySelector(selector).setAttribute('disabled', 'disabled');
+});
 
 mapPinMain.addEventListener('mouseup', function () {
   userDialog.classList.remove('map--faded');
@@ -263,15 +270,13 @@ mapPinMain.addEventListener('mouseup', function () {
   selectors.forEach(function (selector) {
     document.querySelector(selector).removeAttribute('disabled');
   });
-
-  document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
 });
 
 // var a = document.querySelector('.map__pins');
 
 // a.addEventListener('click', function (evt) {
-//  console.log('target: ', evt.target);
-//  console.log('currentTarget: ', evt.currentTarget);
+//   console.log('target: ', evt.target);
+//   console.log('currentTarget: ', evt.currentTarget);
 // });
 
 // 1 event.target - элемент, сгенерировавший событие; (pin)
