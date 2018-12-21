@@ -153,8 +153,8 @@ for (var j = 0; j < apartments.length; j++) {
   fragmentPic.appendChild(renderPic(apartments[j]));
 }
 
-var parentMapElement = document.querySelector('.map');
-var referenceMapElement = document.querySelector('.map__filters-container');
+// var parentMapElement = document.querySelector('.map');
+// var referenceMapElement = document.querySelector('.map__filters-container');
 var similarMapTemplate = document.querySelector('#card').content;
 
 var renderMap = function () {
@@ -250,13 +250,13 @@ var selectors = [
   '#housing-features'
 ];
 
-document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
-adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
-adForm.querySelector('.features').setAttribute('disabled', 'disabled');
-
 selectors.forEach(function (selector) {
   document.querySelector(selector).setAttribute('disabled', 'disabled');
 });
+
+var ready = function () {
+  document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+};
 
 mapPinMain.addEventListener('mouseup', function () {
   userDialog.classList.remove('map--faded');
@@ -272,14 +272,6 @@ mapPinMain.addEventListener('mouseup', function () {
   });
 });
 
-// var a = document.querySelector('.map__pins');
-
-// a.addEventListener('click', function (evt) {
-//   console.log('target: ', evt.target);
-//   console.log('currentTarget: ', evt.currentTarget);
-// });
-
-// 1 event.target - элемент, сгенерировавший событие; (pin)
-// 2 event.currentTarget. - элемент, на котором сработал обработчик события; (map_pins)
-// console
-// .insertBefore(fragmentMap, referenceMapElement);
+adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
+adForm.querySelector('.features').setAttribute('disabled', 'disabled');
+document.addEventListener('DOMContentLoaded', ready);
