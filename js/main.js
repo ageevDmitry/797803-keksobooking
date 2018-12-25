@@ -153,8 +153,6 @@ for (var j = 0; j < apartments.length; j++) {
   fragmentPic.appendChild(renderPic(apartments[j]));
 }
 
-// var parentMapElement = document.querySelector('.map');
-// var referenceMapElement = document.querySelector('.map__filters-container');
 var similarMapTemplate = document.querySelector('#card').content;
 
 var renderMap = function () {
@@ -228,34 +226,20 @@ fragmentMap.appendChild(renderMap(apartments));
 
 var mapPinMain = document.querySelector('.map__pin--main');
 var userDialog = document.querySelector('.map');
-
 var adForm = document.querySelector('.ad-form');
-
-var selectors = [
-  '#avatar',
-  '#title',
-  '#address',
-  '#type',
-  '#price',
-  '#timein',
-  '#timeout',
-  '#room_number',
-  '#capacity',
-  '#description',
-  '#images',
-  '#housing-type',
-  '#housing-price',
-  '#housing-rooms',
-  '#housing-guests',
-  '#housing-features'
-];
-
-selectors.forEach(function (selector) {
-  document.querySelector(selector).setAttribute('disabled', 'disabled');
-});
+var selectors = document.querySelectorAll(
+  'form.ad-form input, form.ad-form  select, form.ad-form  textarea, form.map__filters select, form.map__filters input'
+);
 
 var ready = function () {
   document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+
+  selectors.forEach(function (selector) {
+    selector.setAttribute('disabled', 'disabled');
+  });
+  
+  adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
+  adForm.querySelector('.features').setAttribute('disabled', 'disabled');
 };
 
 mapPinMain.addEventListener('mouseup', function () {
@@ -268,10 +252,8 @@ mapPinMain.addEventListener('mouseup', function () {
   adForm.querySelector('.features').removeAttribute('disabled');
 
   selectors.forEach(function (selector) {
-    document.querySelector(selector).removeAttribute('disabled');
+    selector.removeAttribute('disabled');
   });
 });
 
-adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
-adForm.querySelector('.features').setAttribute('disabled', 'disabled');
 document.addEventListener('DOMContentLoaded', ready);
