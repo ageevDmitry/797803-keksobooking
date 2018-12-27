@@ -236,6 +236,19 @@ var timeInNotice = document.querySelector('#timein');
 var timeOutNotice = document.querySelector('#timeout');
 var addressNotice = document.querySelector('#address');
 
+var typeMap = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var onTypeChange = function(evt) {
+  var minPrice = typeMap[(evt.target.value)];
+  priceNotice.setAttribute('min', minPrice);
+  priceNotice.setAttribute('placeholder', minPrice);
+};
+
 var ready = function () {
   addressNotice.setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
   addressNotice.setAttribute('readonly', 'readonly');
@@ -271,60 +284,15 @@ mapPinMain.addEventListener('mouseup', function () {
   });
 });
 
-document.querySelector('#type').addEventListener('change', function (evt) {
-  if (evt.target.value === 'bungalo') {
-    priceNotice.setAttribute('min', 0);
-    priceNotice.setAttribute('placeholder', 0);
-  } else if (evt.target.value === 'flat') {
-    priceNotice.setAttribute('min', 1000);
-    priceNotice.setAttribute('placeholder', 1000);
-  } else if (evt.target.value === 'house') {
-    priceNotice.setAttribute('min', 5000);
-    priceNotice.setAttribute('placeholder', 5000);
-  } else {
-    priceNotice.setAttribute('min', 10000);
-    priceNotice.setAttribute('placeholder', 10000);
-  }
-});
+document.querySelector('#type').addEventListener('change', onTypeChange);
 
 document.querySelector('#timein').addEventListener('change', function (evt) {
-  if (evt.target.value === '12:00') {
-    timeOutNotice.value = '12:00';
-  } else if (evt.target.value === '13:00') {
-    timeOutNotice.value = '13:00';
-  } else {
-    timeOutNotice.value = '14:00';
-  }
+  timeOutNotice.value = evt.target.value;
 });
 
 document.querySelector('#timeout').addEventListener('change', function (evt) {
-  if (evt.target.value === '12:00') {
-    timeInNotice.value = '12:00';
-  } else if (evt.target.value === '13:00') {
-    timeInNotice.value = '13:00';
-  } else {
-    timeInNotice.value = '14:00';
-  }
+  timeInNotice.value = evt.target.value;
 });
-
 
 document.addEventListener('DOMContentLoaded', ready);
 
-// Пока условно создал отображения шаблонов на кпопки для проверки
-// document.querySelector('.ad-form__submit').addEventListener('click', function () {
-
-//  var notice = document.querySelector('.notice')
-//  var successMessage = document.querySelector('#success').content;
-//  var success = successMessage.cloneNode(true);
-
-//  notice.appendChild(success);
-//});
-
-//document.querySelector('.ad-form__reset').addEventListener('click', function () {
-
-//  var notice = document.querySelector('.notice')
-//  var errorMessage = document.querySelector('#error').content;
-//  var error = errorMessage.cloneNode(true);
-
-//  notice.appendChild(error);
-//});
