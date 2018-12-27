@@ -153,8 +153,6 @@ for (var j = 0; j < apartments.length; j++) {
   fragmentPic.appendChild(renderPic(apartments[j]));
 }
 
-// var parentMapElement = document.querySelector('.map');
-// var referenceMapElement = document.querySelector('.map__filters-container');
 var similarMapTemplate = document.querySelector('#card').content;
 
 var renderMap = function () {
@@ -228,34 +226,48 @@ fragmentMap.appendChild(renderMap(apartments));
 
 var mapPinMain = document.querySelector('.map__pin--main');
 var userDialog = document.querySelector('.map');
-
 var adForm = document.querySelector('.ad-form');
+var selectors = document.querySelectorAll(
+  'form.ad-form input, form.ad-form  select, form.ad-form  textarea, form.map__filters select, form.map__filters input'
+);
+var titleNotice = document.querySelector('#title');
+var priceNotice = document.querySelector('#price');
+var timeInNotice = document.querySelector('#timein');
+var timeOutNotice = document.querySelector('#timeout');
+var addressNotice = document.querySelector('#address');
 
-var selectors = [
-  '#avatar',
-  '#title',
-  '#address',
-  '#type',
-  '#price',
-  '#timein',
-  '#timeout',
-  '#room_number',
-  '#capacity',
-  '#description',
-  '#images',
-  '#housing-type',
-  '#housing-price',
-  '#housing-rooms',
-  '#housing-guests',
-  '#housing-features'
-];
+var typeMap = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
 
-selectors.forEach(function (selector) {
-  document.querySelector(selector).setAttribute('disabled', 'disabled');
-});
+var onTypeChange = function(evt) {
+  var minPrice = typeMap[(evt.target.value)];
+  priceNotice.setAttribute('min', minPrice);
+  priceNotice.setAttribute('placeholder', minPrice);
+};
 
 var ready = function () {
-  document.querySelector('#address').setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+  addressNotice.setAttribute('value', PIC_COORDINATE_Х_DEFAULT + ', ' + PIC_COORDINATE_Y_DEFAULT);
+  addressNotice.setAttribute('readonly', 'readonly');
+
+  selectors.forEach(function (selector) {
+    selector.setAttribute('disabled', 'disabled');
+  });
+
+  adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
+  adForm.querySelector('.features').setAttribute('disabled', 'disabled');
+  titleNotice.setAttribute('required', 'required');
+  titleNotice.setAttribute('minlength', '30');
+  titleNotice.setAttribute('maxlength', '100');
+  priceNotice.setAttribute('required', 'required');
+  priceNotice.setAttribute('max', 1000000);
+  adForm.setAttribute('method', 'post');
+  adForm.setAttribute('enctype', 'multipart/form-data');
+  adForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
+
 };
 
 mapPinMain.addEventListener('mouseup', function () {
@@ -268,10 +280,19 @@ mapPinMain.addEventListener('mouseup', function () {
   adForm.querySelector('.features').removeAttribute('disabled');
 
   selectors.forEach(function (selector) {
-    document.querySelector(selector).removeAttribute('disabled');
+    selector.removeAttribute('disabled');
   });
 });
 
-adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
-adForm.querySelector('.features').setAttribute('disabled', 'disabled');
+document.querySelector('#type').addEventListener('change', onTypeChange);
+
+document.querySelector('#timein').addEventListener('change', function (evt) {
+  timeOutNotice.value = evt.target.value;
+});
+
+document.querySelector('#timeout').addEventListener('change', function (evt) {
+  timeInNotice.value = evt.target.value;
+});
+
 document.addEventListener('DOMContentLoaded', ready);
+
