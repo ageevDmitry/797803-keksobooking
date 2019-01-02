@@ -17,8 +17,8 @@ var APARTMENT_GUESTS_MAX = 7;
 var RUBLE = '&#x20bd';
 var PIC_WIDTH = 40;
 var PIC_HEIGHT = 40;
-var PIC_WIDTH_MAIN = 40;
-var PIC_HEIGHT_MAIN = 44;
+var PIC_WIDTH_MAIN = 64;
+var PIC_HEIGHT_MAIN = 77;
 var apartmentOfferTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -295,6 +295,9 @@ document.addEventListener('DOMContentLoaded', ready);
     };
 
     var dragged = false;
+    var firstMove = true;
+    var mapOverlay = document.querySelector('.map__overlay');
+    var mapOverlayWidth = mapOverlay.offsetWidth;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
@@ -314,15 +317,18 @@ document.addEventListener('DOMContentLoaded', ready);
       var mapPinMainLeft = mapPinMain.offsetLeft - shift.x;
 
       if (mapPinMainTop < PIC_COORDINATE_Y_MIN - PIC_HEIGHT_MAIN) {
-        mapPinMain.style.top = PIC_COORDINATE_Y_MIN;
+        mapPinMain.style.top = PIC_COORDINATE_Y_MIN - PIC_HEIGHT_MAIN + 'px';
       } else if (mapPinMainTop > PIC_COORDINATE_Y_MAX - PIC_HEIGHT_MAIN) {
-        mapPinMain.style.top = PIC_COORDINATE_Y_MAX;
-      } else if (mapPinMainLeft < PIC_COORDINATE_X_MIN - PIC_WIDTH_MAIN / 2) {
-        mapPinMain.style.top = PIC_COORDINATE_X_MIN;
-      } else if (mapPinMainLeft > PIC_COORDINATE_X_MAX - PIC_WIDTH_MAIN / 2) {
-        mapPinMain.style.top = PIC_COORDINATE_X_MAX;
+        mapPinMain.style.top = PIC_COORDINATE_Y_MAX - PIC_HEIGHT_MAIN + 'px';
       } else {
         mapPinMain.style.top = mapPinMainTop + 'px';
+      }
+
+      if (mapPinMainLeft < 0) {
+        mapPinMain.style.left = 0 + 'px';
+      } else if (mapPinMainLeft > mapOverlayWidth - PIC_WIDTH_MAIN) {
+        mapPinMain.style.left = mapOverlayWidth - PIC_WIDTH_MAIN + 'px';
+      } else {
         mapPinMain.style.left = mapPinMainLeft + 'px';
       }
 
@@ -333,7 +339,6 @@ document.addEventListener('DOMContentLoaded', ready);
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      var firstMove = true;
 
       if (firstMove) {
         userDialog.classList.remove('map--faded');
