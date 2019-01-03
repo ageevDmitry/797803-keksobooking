@@ -17,6 +17,8 @@ var APARTMENT_GUESTS_MAX = 7;
 var RUBLE = '&#x20bd';
 var PIC_WIDTH = 40;
 var PIC_HEIGHT = 40;
+var PIC_WIDTH_MAIN = 64;
+var PIC_HEIGHT_MAIN = 84;
 var apartmentOfferTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -140,7 +142,7 @@ var renderPic = function (apartment) {
 
   var picElement = similarPicTemplate.cloneNode(true);
 
-  picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y - PIC_HEIGHT) + 'px;');
+  picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x + PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y + PIC_HEIGHT) + 'px;');
   picElement.querySelector('img').setAttribute('src', apartment.author.avatar);
   picElement.querySelector('img').setAttribute('alt', apartment.offer.title);
 
@@ -228,7 +230,7 @@ var mapPinMain = document.querySelector('.map__pin--main');
 var userDialog = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var selectors = document.querySelectorAll(
-  'form.ad-form input, form.ad-form  select, form.ad-form  textarea, form.map__filters select, form.map__filters input'
+    'form.ad-form input, form.ad-form  select, form.ad-form  textarea, form.map__filters select, form.map__filters input'
 );
 var titleNotice = document.querySelector('#title');
 var priceNotice = document.querySelector('#price');
@@ -243,7 +245,7 @@ var typeMap = {
   palace: 10000
 };
 
-var onTypeChange = function(evt) {
+var onTypeChange = function (evt) {
   var minPrice = typeMap[(evt.target.value)];
   priceNotice.setAttribute('min', minPrice);
   priceNotice.setAttribute('placeholder', minPrice);
@@ -270,20 +272,6 @@ var ready = function () {
 
 };
 
-mapPinMain.addEventListener('mouseup', function () {
-  userDialog.classList.remove('map--faded');
-
-  similarPicElement.appendChild(fragmentPic);
-
-  adForm.classList.remove('ad-form--disabled');
-  adForm.querySelector('.ad-form__element--submit').removeAttribute('disabled');
-  adForm.querySelector('.features').removeAttribute('disabled');
-
-  selectors.forEach(function (selector) {
-    selector.removeAttribute('disabled');
-  });
-});
-
 document.querySelector('#type').addEventListener('change', onTypeChange);
 
 document.querySelector('#timein').addEventListener('change', function (evt) {
@@ -296,3 +284,91 @@ document.querySelector('#timeout').addEventListener('change', function (evt) {
 
 document.addEventListener('DOMContentLoaded', ready);
 
+(function () {
+
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var dragged = false;
+    var firstMove = true;
+    var mapOverlay = document.querySelector('.map__overlay');
+    var mapOverlayWidth = mapOverlay.offsetWidth;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      dragged = true;
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var mapPinMainTop = mapPinMain.offsetTop - shift.y;
+      var mapPinMainLeft = mapPinMain.offsetLeft - shift.x;
+
+      if (mapPinMainTop < PIC_COORDINATE_Y_MIN) {
+        mapPinMain.style.top = PIC_COORDINATE_Y_MIN + 'px';
+      } else if (mapPinMainTop > PIC_COORDINATE_Y_MAX) {
+        mapPinMain.style.top = PIC_COORDINATE_Y_MAX + 'px';
+      } else {
+        mapPinMain.style.top = mapPinMainTop + 'px';
+      }
+
+      if (mapPinMainLeft < 0) {
+        mapPinMain.style.left = 0 + 'px';
+      } else if (mapPinMainLeft > mapOverlayWidth - PIC_WIDTH_MAIN) {
+        mapPinMain.style.left = mapOverlayWidth - PIC_WIDTH_MAIN + 'px';
+      } else {
+        mapPinMain.style.left = mapPinMainLeft + 'px';
+      }
+
+      var mapPinMainLeftCoords = mapPinMainLeft + PIC_WIDTH_MAIN / 2;
+      var mapPinMainTopCoords = mapPinMainTop + PIC_HEIGHT_MAIN;
+      addressNotice.setAttribute('value', mapPinMainLeftCoords + ', ' + mapPinMainTopCoords);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      if (firstMove) {
+        userDialog.classList.remove('map--faded');
+
+        similarPicElement.appendChild(fragmentPic);
+
+        adForm.classList.remove('ad-form--disabled');
+        adForm.querySelector('.ad-form__element--submit').removeAttribute('disabled');
+        adForm.querySelector('.features').removeAttribute('disabled');
+
+        selectors.forEach(function (selector) {
+          selector.removeAttribute('disabled');
+        });
+        firstMove = false;
+      }
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function (e) {
+          e.preventDefault();
+          mapPinMain.removeEventListener('click', onClickPreventDefault);
+        };
+        mapPinMain.addEventListener('click', onClickPreventDefault);
+      }
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+})();
