@@ -18,7 +18,7 @@ var RUBLE = '&#x20bd';
 var PIC_WIDTH = 40;
 var PIC_HEIGHT = 40;
 var PIC_WIDTH_MAIN = 64;
-var PIC_HEIGHT_MAIN = 77;
+var PIC_HEIGHT_MAIN = 84;
 var apartmentOfferTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -316,10 +316,10 @@ document.addEventListener('DOMContentLoaded', ready);
       var mapPinMainTop = mapPinMain.offsetTop - shift.y;
       var mapPinMainLeft = mapPinMain.offsetLeft - shift.x;
 
-      if (mapPinMainTop < PIC_COORDINATE_Y_MIN - PIC_HEIGHT_MAIN) {
-        mapPinMain.style.top = PIC_COORDINATE_Y_MIN - PIC_HEIGHT_MAIN + 'px';
-      } else if (mapPinMainTop > PIC_COORDINATE_Y_MAX - PIC_HEIGHT_MAIN) {
-        mapPinMain.style.top = PIC_COORDINATE_Y_MAX - PIC_HEIGHT_MAIN + 'px';
+      if (mapPinMainTop < PIC_COORDINATE_Y_MIN) {
+        mapPinMain.style.top = PIC_COORDINATE_Y_MIN + 'px';
+      } else if (mapPinMainTop > PIC_COORDINATE_Y_MAX) {
+        mapPinMain.style.top = PIC_COORDINATE_Y_MAX + 'px';
       } else {
         mapPinMain.style.top = mapPinMainTop + 'px';
       }
