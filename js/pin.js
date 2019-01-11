@@ -7,6 +7,7 @@
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
 
+
   var renderPic = function (apartment) {
 
     var picElement = similarPicTemplate.cloneNode(true);
@@ -20,9 +21,18 @@
 
   var fragmentPic = document.createDocumentFragment();
 
-  for (var j = 0; j < window.data.apartments.length; j++) {
-    fragmentPic.appendChild(renderPic(window.data.apartments[j]));
-  }
+  var otherPics = function (pics) {
+
+    console.log(pics);
+
+    for (var j = 0; j < pics.length; j++) {
+      fragmentPic.appendChild(renderPic(pics[j]));
+    }
+
+    return fragmentPic;
+  };
+
+  window.server.load(otherPics, window.error.rendErrorMessage);
 
   window.pin = {
     similarPicElement: similarPicElement,
