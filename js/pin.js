@@ -2,8 +2,8 @@
 
 (function () {
 
-  var PIC_WIDTH = 40;
-  var PIC_HEIGHT = 40;
+  var PIC_WIDTH = 50;
+  var PIC_HEIGHT = 70;
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
 
@@ -12,7 +12,7 @@
 
     var picElement = similarPicTemplate.cloneNode(true);
 
-    picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x + PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y + PIC_HEIGHT) + 'px;');
+    picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y - PIC_HEIGHT) + 'px;');
     picElement.querySelector('img').setAttribute('src', apartment.author.avatar);
     picElement.querySelector('img').setAttribute('alt', apartment.offer.title);
 
@@ -22,8 +22,6 @@
   var fragmentPic = document.createDocumentFragment();
 
   var otherPics = function (pics) {
-
-    console.log(pics);
 
     for (var j = 0; j < pics.length; j++) {
       fragmentPic.appendChild(renderPic(pics[j]));
