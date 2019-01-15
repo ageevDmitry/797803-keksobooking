@@ -49,11 +49,15 @@
   };
 
   var sortPics = function (typePins) {
-    var samePins = serverArrPins.filter(function (it) {
-      return it.offer.type === typePins;
-    });
 
-    otherPics(samePins, true);
+    if (typePins === 'any') {
+      otherPics(serverArrPins, true);
+    } else {
+      var samePins = serverArrPins.filter(function (it) {
+        return it.offer.type === typePins;
+      });
+      otherPics(samePins, true);
+    }
   };
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
