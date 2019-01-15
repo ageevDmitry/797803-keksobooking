@@ -4,9 +4,11 @@
 
   var PIC_WIDTH = 50;
   var PIC_HEIGHT = 70;
+  var MAX_QUANTITY_PICS = 5;
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
-
+  var serverArrPins = [];
+  var startState = true;
 
   var renderPic = function (apartment) {
 
@@ -21,14 +23,43 @@
 
   var fragmentPic = document.createDocumentFragment();
 
-  var otherPics = function (pics) {
+  var otherPics = function (arrPics, changePins) {
 
-    for (var j = 0; j < pics.length; j++) {
-      fragmentPic.appendChild(renderPic(pics[j]));
+    var limitedSamePins = arrPics.slice(0, MAX_QUANTITY_PICS);
+
+    if (changePins) {
+      var setupSimilarItem = document.querySelectorAll('.map__pin');
+      setupSimilarItem.forEach(function (Item) {
+        similarPicElement.removeChild(Item);
+      });
+    } else {
+      serverArrPins = arrPics.slice(0);
     }
 
+    for (var j = 0; j < limitedSamePins.length; j++) {
+      fragmentPic.appendChild(renderPic(arrPics[j]));
+    }
+
+    if (!startState) {
+      similarPicElement.appendChild(fragmentPic);
+    }
+
+    startState = false;
     return fragmentPic;
   };
+
+  var sortPics = function (typePins) {
+    var samePins = serverArrPins.filter(function (it) {
+      return it.offer.type === typePins;
+    });
+
+    otherPics(samePins, true);
+  };
+
+  document.querySelector('#housing-type').addEventListener('change', function (evt) {
+    var typeHouse = evt.target.value;
+    sortPics(typeHouse);
+  });
 
   window.server.load(otherPics, window.error.rendErrorMessage);
 
