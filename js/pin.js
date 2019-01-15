@@ -28,7 +28,7 @@
     var limitedSamePins = arrPics.slice(0, MAX_QUANTITY_PICS);
 
     if (changePins) {
-      var setupSimilarItem = document.querySelectorAll('.map__pin');
+      var setupSimilarItem = document.querySelectorAll('.map__pin:not(.map__pin--main)');
       setupSimilarItem.forEach(function (Item) {
         similarPicElement.removeChild(Item);
       });
