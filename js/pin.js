@@ -9,14 +9,27 @@
   var similarPicTemplate = document.querySelector('#pin').content;
   var serverArrPins = [];
   var startState = true;
+  var map = document.querySelector('.map');
+  var popup = document.querySelector('.map__card popup');
 
   var renderPic = function (apartment) {
 
     var picElement = similarPicTemplate.cloneNode(true);
+    var button = picElement.querySelector('button');
 
     picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y - PIC_HEIGHT) + 'px;');
     picElement.querySelector('img').setAttribute('src', apartment.author.avatar);
     picElement.querySelector('img').setAttribute('alt', apartment.offer.title);
+
+    button.addEventListener('click', function () {
+
+      // if (!startState) {
+      //   map.removeChild(popup);
+      // }
+
+      window.card.fragmentMap.appendChild(window.card.renderMap(apartment));
+      window.card.parentMapElement.insertBefore(window.card.fragmentMap, window.card.referenceMapElement);
+    });
 
     return picElement;
   };
@@ -37,7 +50,7 @@
     }
 
     for (var j = 0; j < limitedSamePins.length; j++) {
-      fragmentPic.appendChild(renderPic(arrPics[j]));
+      fragmentPic.appendChild(renderPic(arrPics[j], j));
     }
 
     if (!startState) {
@@ -64,6 +77,10 @@
     var typeHouse = evt.target.value;
     sortPics(typeHouse);
   });
+
+  // document.querySelector('.popup_close').addEventListener('click', function () {
+  //   console.log('Закрытие попапа');
+  // });
 
   window.server.load(otherPics, window.error.rendErrorMessage);
 

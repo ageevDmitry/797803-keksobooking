@@ -67,7 +67,7 @@
       if (firstMove) {
         userDialog.classList.remove('map--faded');
 
-        window.card.parentMapElement.insertBefore(window.card.fragmentMap, window.card.referenceMapElement);
+        // window.card.parentMapElement.insertBefore(window.card.fragmentMap, window.card.referenceMapElement);
 
         window.pin.similarPicElement.appendChild(window.pin.fragmentPic);
 
