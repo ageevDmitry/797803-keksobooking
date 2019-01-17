@@ -9,8 +9,6 @@
   var similarPicTemplate = document.querySelector('#pin').content;
   var serverArrPins = [];
   var startState = true;
-  var map = document.querySelector('.map');
-  var popup = document.querySelector('.map__card popup');
 
   var renderPic = function (apartment) {
 
@@ -23,12 +21,15 @@
 
     button.addEventListener('click', function () {
 
-      // if (!startState) {
-      //   map.removeChild(popup);
-      // }
+      var articlePopup = document.querySelector('article');
 
-      window.card.fragmentMap.appendChild(window.card.renderMap(apartment));
-      window.card.parentMapElement.insertBefore(window.card.fragmentMap, window.card.referenceMapElement);
+      if (articlePopup) {
+        window.popup.closePopup();
+      }
+
+      window.popup.fragmentMap.appendChild(window.popup.renderPopup(apartment));
+      window.popup.parentMapElement.insertBefore(window.popup.fragmentMap, window.popup.referenceMapElement);
+
     });
 
     return picElement;
@@ -77,10 +78,6 @@
     var typeHouse = evt.target.value;
     sortPics(typeHouse);
   });
-
-  // document.querySelector('.popup_close').addEventListener('click', function () {
-  //   console.log('Закрытие попапа');
-  // });
 
   window.server.load(otherPics, window.error.rendErrorMessage);
 

@@ -3,6 +3,7 @@
 (function () {
 
   var RUBLE = '&#x20bd';
+  var ECS_KEYCODE = 27;
   var NUMBER_OF_FEATURES = 6;
   var parentMapElement = document.querySelector('.map');
   var referenceMapElement = document.querySelector('.map__filters-container');
@@ -19,7 +20,7 @@
     return 'Бунгало';
   };
 
-  var renderMap = function (apartments) {
+  var renderPopup = function (apartments) {
 
     var mapElement = similarMapTemplate.cloneNode(true);
 
@@ -81,16 +82,33 @@
       getPopapFeatures(apartments.offer.features[p]);
     }
 
+    mapElement.querySelector('.popup__close').addEventListener('click', function () {
+      closePopup();
+    });
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ECS_KEYCODE) {
+        closePopup();
+      }
+    });
+
     return mapElement;
+  };
+
+  var closePopup = function () {
+    var articlePopup = document.querySelector('article');
+    parentMapElement.removeChild(articlePopup);
   };
 
   var fragmentMap = document.createDocumentFragment();
 
-  window.card = {
+  window.popup = {
     parentMapElement: parentMapElement,
     fragmentMap: fragmentMap,
     referenceMapElement: referenceMapElement,
-    renderMap: renderMap
+    renderPopup: renderPopup,
+    closePopup: closePopup
   };
 
 })();
+
