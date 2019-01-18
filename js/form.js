@@ -13,6 +13,7 @@
   var timeInNotice = document.querySelector('#timein');
   var timeOutNotice = document.querySelector('#timeout');
   var addressNotice = document.querySelector('#address');
+  // var capacityNotice = document.querySelector('#capacity');
 
   var typeMap = {
     bungalo: 0,
@@ -57,6 +58,38 @@
   document.querySelector('#timeout').addEventListener('change', function (evt) {
     timeInNotice.value = evt.target.value;
   });
+
+  document.querySelector('#room_number').addEventListener('change', function (evt) {
+
+    var capacityInputNew = document.querySelectorAll('#capacity option');
+    capacityInputNew.forEach(function (Item) {
+      Item.option.disabled = false;
+    });
+
+    var valueRoomNumber = evt.target.value;
+    validRoomsCapacity(valueRoomNumber);
+  });
+
+  var validRoomsCapacity = function (valueInput) {
+
+    var capacityInput = document.querySelector('#capacity');
+    var rooms = {
+      1: [2, 3, 0],
+      2: [3, 0],
+      3: [0],
+      100: [1, 2, 3]
+    };
+
+    var disabled = rooms[valueInput];
+
+    Array.prototype.forEach.call(capacityInput.options, function (option) {
+      if (disabled.includes(parseInt(option.value, 10))) {
+        option.disabled = true;
+      }
+    });
+
+  };
+
 
   document.addEventListener('DOMContentLoaded', ready);
 

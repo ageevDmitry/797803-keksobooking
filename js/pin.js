@@ -62,21 +62,36 @@
     return fragmentPic;
   };
 
-  var sortPics = function (typePins) {
+  var sortPics = function (typePins, typePrice) {
 
-    if (typePins === 'any') {
-      otherPics(serverArrPins, true);
-    } else {
-      var samePins = serverArrPins.filter(function (it) {
+    if (typePins) {
+      var sameTypePins = serverArrPins.filter(function (it) {
         return it.offer.type === typePins;
       });
-      otherPics(samePins, true);
+      otherPics(sameTypePins, true);
+    } else if (typePins === 'any') {
+      otherPics(sameTypePins, true);
+    }
+
+    if (typePrice) {
+
+      if (typePrice === 'low') {
+        var samePricePins = serverArrPins.filter(function (it) {
+          return it.offer.price < 10000;
+        });
+        otherPics(samePricePins, true);
+      }
     }
   };
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
     var typeHouse = evt.target.value;
-    sortPics(typeHouse);
+    sortPics(typeHouse, null);
+  });
+
+  document.querySelector('#housing-price').addEventListener('change', function (evt) {
+    var typePrice = evt.target.value;
+    sortPics(null, typePrice);
   });
 
   window.server.load(otherPics, window.error.rendErrorMessage);
@@ -87,3 +102,4 @@
   };
 
 })();
+
