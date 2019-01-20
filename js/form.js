@@ -13,20 +13,13 @@
   var timeInNotice = document.querySelector('#timein');
   var timeOutNotice = document.querySelector('#timeout');
   var addressNotice = document.querySelector('#address');
-  var capacityInput = document.querySelector('#capacity');
+  // var capacityNotice = document.querySelector('#capacity');
 
   var typeMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
-  };
-
-  var rooms = {
-    1: [2, 3, 0],
-    2: [3, 0],
-    3: [0],
-    100: [1, 2, 3]
   };
 
   var onTypeChange = function (evt) {
@@ -50,25 +43,11 @@
     titleNotice.setAttribute('maxlength', '100');
     priceNotice.setAttribute('required', 'required');
     priceNotice.setAttribute('max', 1000000);
-    // adForm.setAttribute('method', 'post');
-    // adForm.setAttribute('enctype', 'multipart/form-data');
-    // adForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
+    adForm.setAttribute('method', 'post');
+    adForm.setAttribute('enctype', 'multipart/form-data');
+    adForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
 
   };
-
-  var validRoomsCapacity = function (valueInput) {
-
-    var disabled = rooms[valueInput];
-
-    for (var i = 0; i < capacityInput.options.length; i++) {
-      var option = capacityInput.options[i];
-
-      if (disabled.includes(parseInt(option.value, 10))) {
-        option.disabled = true;
-      }
-    }
-  };
-
 
   document.querySelector('#type').addEventListener('change', onTypeChange);
 
@@ -82,28 +61,42 @@
 
   document.querySelector('#room_number').addEventListener('change', function (evt) {
 
-    for (var i = 0; i < capacityInput.options.length; i++) {
-      capacityInput.options[i].disabled = false;
-    }
+    var capacityInputNew = document.querySelectorAll('#capacity option');
+    capacityInputNew.forEach(function (Item) {
+      Item.option.disabled = false;
+    });
 
     var valueRoomNumber = evt.target.value;
     validRoomsCapacity(valueRoomNumber);
   });
 
-  adForm.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.server.save(new FormData(adForm),
-        window.serverMessage.rendSuccessMessage,
-        window.serverMessage.rendErrorMessage);
-  });
+  var validRoomsCapacity = function (valueInput) {
+
+    var capacityInput = document.querySelector('#capacity');
+    var rooms = {
+      1: [2, 3, 0],
+      2: [3, 0],
+      3: [0],
+      100: [1, 2, 3]
+    };
+
+    var disabled = rooms[valueInput];
+
+    Array.prototype.forEach.call(capacityInput.options, function (option) {
+      if (disabled.includes(parseInt(option.value, 10))) {
+        option.disabled = true;
+      }
+    });
+
+  };
+
 
   document.addEventListener('DOMContentLoaded', ready);
 
   window.form = {
     adForm: adForm,
     selectors: selectors,
-    addressNotice: addressNotice,
-    ready: ready
+    addressNotice: addressNotice
   };
 
 })();
