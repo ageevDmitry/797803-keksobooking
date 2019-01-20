@@ -94,7 +94,7 @@
     sortPics(null, typePrice);
   });
 
-  window.server.load(otherPics, window.error.rendErrorMessage);
+  window.server.load(otherPics);
 
   window.pin = {
     similarPicElement: similarPicElement,
