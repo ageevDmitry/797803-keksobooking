@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var PIC_MAIN_COORDINATE_Х_DEFAULT = 570;
   var PIC_MAIN_COORDINATE_Y_DEFAULT = 375;
   var adForm = document.querySelector('.ad-form');
@@ -13,23 +12,28 @@
   var timeInNotice = document.querySelector('#timein');
   var timeOutNotice = document.querySelector('#timeout');
   var addressNotice = document.querySelector('#address');
-  // var capacityNotice = document.querySelector('#capacity');
+  var adFormFeatures = adForm.querySelector('.features');
+  var adFormSubmit = adForm.querySelector('.ad-form__element--submit');
+  var capacityInputNew = document.querySelectorAll('#capacity option');
 
   var typeMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
-    palace: 10000
+    palace: 10000,
   };
 
   var onTypeChange = function (evt) {
-    var minPrice = typeMap[(evt.target.value)];
+    var minPrice = typeMap[evt.target.value];
     priceNotice.setAttribute('min', minPrice);
     priceNotice.setAttribute('placeholder', minPrice);
   };
 
   var ready = function () {
-    addressNotice.setAttribute('value', PIC_MAIN_COORDINATE_Х_DEFAULT + ', ' + PIC_MAIN_COORDINATE_Y_DEFAULT);
+    addressNotice.setAttribute(
+        'value',
+        PIC_MAIN_COORDINATE_Х_DEFAULT + ', ' + PIC_MAIN_COORDINATE_Y_DEFAULT
+    );
     addressNotice.setAttribute('readonly', 'readonly');
 
     selectors.forEach(function (selector) {
@@ -46,7 +50,23 @@
     adForm.setAttribute('method', 'post');
     adForm.setAttribute('enctype', 'multipart/form-data');
     adForm.setAttribute('action', 'https://js.dump.academy/keksobooking');
+  };
 
+  var validRoomsCapacity = function (valueInput) {
+    var rooms = {
+      1: [2, 3, 0],
+      2: [3, 0],
+      3: [0],
+      100: [1, 2, 3],
+    };
+
+    var disabled = rooms[valueInput];
+
+    capacityInputNew.forEach(function (Item) {
+      if (disabled.includes(parseInt(Item.value, 10))) {
+        Item.disabled = true;
+      }
+    });
   };
 
   document.querySelector('#type').addEventListener('change', onTypeChange);
@@ -60,43 +80,27 @@
   });
 
   document.querySelector('#room_number').addEventListener('change', function (evt) {
-
-    var capacityInputNew = document.querySelectorAll('#capacity option');
     capacityInputNew.forEach(function (Item) {
-      Item.option.disabled = false;
+      Item.disabled = false;
     });
-
-    var valueRoomNumber = evt.target.value;
-    validRoomsCapacity(valueRoomNumber);
+    validRoomsCapacity(evt.target.value);
   });
 
-  var validRoomsCapacity = function (valueInput) {
-
-    var capacityInput = document.querySelector('#capacity');
-    var rooms = {
-      1: [2, 3, 0],
-      2: [3, 0],
-      3: [0],
-      100: [1, 2, 3]
-    };
-
-    var disabled = rooms[valueInput];
-
-    Array.prototype.forEach.call(capacityInput.options, function (option) {
-      if (disabled.includes(parseInt(option.value, 10))) {
-        option.disabled = true;
-      }
-    });
-
-  };
-
+  adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.server.save(new FormData(adForm),
+        window.serverMessage.rendSuccessMessage,
+        window.serverMessage.rendErrorMessage);
+  });
 
   document.addEventListener('DOMContentLoaded', ready);
 
   window.form = {
     adForm: adForm,
     selectors: selectors,
-    addressNotice: addressNotice
+    addressNotice: addressNotice,
+    adFormFeatures: adFormFeatures,
+    adFormSubmit: adFormSubmit,
   };
-
 })();
+

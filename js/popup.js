@@ -1,10 +1,8 @@
 'use strict';
 
 (function () {
-
   var RUBLE = '&#x20bd';
   var ECS_KEYCODE = 27;
-  var NUMBER_OF_FEATURES = 6;
   var parentMapElement = document.querySelector('.map');
   var referenceMapElement = document.querySelector('.map__filters-container');
   var similarMapTemplate = document.querySelector('#card').content;
@@ -21,16 +19,19 @@
   };
 
   var renderPopup = function (apartments) {
-
     var mapElement = similarMapTemplate.cloneNode(true);
 
     mapElement.querySelector('.popup__avatar').setAttribute('src', apartments.author.avatar);
     mapElement.querySelector('.popup__title').textContent = apartments.offer.title;
     mapElement.querySelector('.popup__text--address').textContent = apartments.offer.address;
     mapElement.querySelector('.popup__text--price').innerHTML = apartments.offer.price + RUBLE;
-    mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(apartments.offer.type);
-    mapElement.querySelector('.popup__text--capacity').textContent = apartments.offer.rooms + ' комнаты для ' + apartments.offer.guests + ' гостей';
-    mapElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + apartments.offer.checkin + ', выезд до ' + apartments.offer.checkout;
+    mapElement.querySelector('.popup__type').textContent = getOfferTypeInRussian(
+        apartments.offer.type
+    );
+    mapElement.querySelector('.popup__text--capacity').textContent =
+      apartments.offer.rooms + ' комнаты для ' + apartments.offer.guests + ' гостей';
+    mapElement.querySelector('.popup__text--time').textContent =
+      'Заезд после ' + apartments.offer.checkin + ', выезд до ' + apartments.offer.checkout;
     mapElement.querySelector('.popup__description').textContent = apartments.offer.description;
 
     var parentPhotoElement = mapElement.querySelector('.popup__photos');
@@ -45,9 +46,9 @@
     var popapElevator = mapElement.querySelector('.popup__feature--elevator');
     var popapConditioner = mapElement.querySelector('.popup__feature--conditioner');
 
-    var renderPhoto = function (popupPhotoElement, apartment, k) {
-      popupPhotoElement.setAttribute('src', apartment.offer.photos[k]);
+    var renderPhoto = function (popupPhotoElement, photoUrl) {
       var photo = popupPhotoElement.cloneNode(true);
+      photo.setAttribute('src', photoUrl);
       return photo;
     };
 
@@ -66,33 +67,31 @@
       } else {
         cloneElement = popapConditioner;
       }
-      return parentFeaturesElement.appendChild(cloneElement.cloneNode(true));
+      parentFeaturesElement.appendChild(cloneElement.cloneNode(true));
     };
 
-    for (var k = 0; k < apartments.offer.photos.length; k++) {
-      parentPhotoElement.appendChild(renderPhoto(popupPhoto, apartments, k));
-    }
+    apartments.offer.photos.forEach(function (photo) {
+      parentPhotoElement.appendChild(renderPhoto(popupPhoto, photo));
+    });
 
-    for (var n = NUMBER_OF_FEATURES; n > 0; n--) {
-      var childrenFeatures = parentFeaturesElement.children[n - 1];
-      childrenFeatures.remove();
-    }
+    parentFeaturesElement.innerHTML = '';
 
-    for (var p = 0; p < apartments.offer.features.length; p++) {
-      getPopapFeatures(apartments.offer.features[p]);
-    }
+    apartments.offer.features.forEach(function (feature) {
+      getPopapFeatures(feature);
+    });
 
     mapElement.querySelector('.popup__close').addEventListener('click', function () {
       closePopup();
     });
 
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ECS_KEYCODE) {
-        closePopup();
-      }
-    });
-
+    document.addEventListener('keydown', closeEscPopup, {once: true});
     return mapElement;
+  };
+
+  var closeEscPopup = function (e) {
+    if (e.keyCode === ECS_KEYCODE) {
+      closePopup();
+    }
   };
 
   var closePopup = function () {
@@ -107,8 +106,6 @@
     fragmentMap: fragmentMap,
     referenceMapElement: referenceMapElement,
     renderPopup: renderPopup,
-    closePopup: closePopup
+    closePopup: closePopup,
   };
-
 })();
-

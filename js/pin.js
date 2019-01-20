@@ -1,87 +1,82 @@
 'use strict';
 
 (function () {
-
   var PIC_WIDTH = 50;
   var PIC_HEIGHT = 70;
   var MAX_QUANTITY_PICS = 5;
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
-  var serverArrPins = [];
-  var startState = true;
+  var loadedAppartments = [];
 
   var renderPic = function (apartment) {
-
     var picElement = similarPicTemplate.cloneNode(true);
     var button = picElement.querySelector('button');
 
-    picElement.querySelector('button').setAttribute('style', 'left: ' + (apartment.location.x - PIC_WIDTH / 2) + 'px; top: ' + (apartment.location.y - PIC_HEIGHT) + 'px;');
+    picElement
+      .querySelector('button')
+      .setAttribute(
+          'style',
+          'left: ' +
+          (apartment.location.x - PIC_WIDTH / 2) +
+          'px; top: ' +
+          (apartment.location.y - PIC_HEIGHT) +
+          'px;'
+      );
     picElement.querySelector('img').setAttribute('src', apartment.author.avatar);
     picElement.querySelector('img').setAttribute('alt', apartment.offer.title);
 
     button.addEventListener('click', function () {
 
-      var articlePopup = document.querySelector('article');
-
-      if (articlePopup) {
+      if (document.querySelector('article')) {
         window.popup.closePopup();
       }
 
-      window.popup.fragmentMap.appendChild(window.popup.renderPopup(apartment));
-      window.popup.parentMapElement.insertBefore(window.popup.fragmentMap, window.popup.referenceMapElement);
-
+      window.popup.parentMapElement.insertBefore(
+          window.popup.renderPopup(apartment),
+          window.popup.referenceMapElement
+      );
     });
 
     return picElement;
   };
 
-  var fragmentPic = document.createDocumentFragment();
+  var removePins = function () {
+    var setupSimilarItem = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    setupSimilarItem.forEach(function (Item) {
+      similarPicElement.removeChild(Item);
+    });
+  };
 
-  var otherPics = function (arrPics, changePins) {
-
+  var renderPins = function (arrPics) {
+    var fragmentPic = document.createDocumentFragment();
     var limitedSamePins = arrPics.slice(0, MAX_QUANTITY_PICS);
+    limitedSamePins.forEach(function (pin) {
+      fragmentPic.appendChild(renderPic(pin));
+    });
 
-    if (changePins) {
-      var setupSimilarItem = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-      setupSimilarItem.forEach(function (Item) {
-        similarPicElement.removeChild(Item);
-      });
-    } else {
-      serverArrPins = arrPics.slice(0);
-    }
-
-    for (var j = 0; j < limitedSamePins.length; j++) {
-      fragmentPic.appendChild(renderPic(arrPics[j], j));
-    }
-
-    if (!startState) {
-      similarPicElement.appendChild(fragmentPic);
-    }
-
-    startState = false;
-    return fragmentPic;
+    similarPicElement.appendChild(fragmentPic);
   };
 
   var sortPics = function (typePins, typePrice) {
-
-    if (typePins) {
-      var sameTypePins = serverArrPins.filter(function (it) {
+    var filteredPins = [];
+    if (typePins && typePins !== 'any') {
+      filteredPins = loadedAppartments.filter(function (it) {
         return it.offer.type === typePins;
       });
-      otherPics(sameTypePins, true);
     } else if (typePins === 'any') {
-      otherPics(sameTypePins, true);
+      filteredPins = loadedAppartments;
     }
 
     if (typePrice) {
-
       if (typePrice === 'low') {
-        var samePricePins = serverArrPins.filter(function (it) {
+        filteredPins = loadedAppartments.filter(function (it) {
           return it.offer.price < 10000;
         });
-        otherPics(samePricePins, true);
       }
     }
+
+    removePins();
+    renderPins(filteredPins.slice(0, MAX_QUANTITY_PICS));
   };
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
@@ -94,12 +89,17 @@
     sortPics(null, typePrice);
   });
 
-  window.server.load(otherPics, window.error.rendErrorMessage);
-
-  window.pin = {
-    similarPicElement: similarPicElement,
-    fragmentPic: fragmentPic,
+  var successLoad = function (data) {
+    loadedAppartments = data.slice(0);
+    renderPins(loadedAppartments);
   };
 
-})();
+  var loadData = function () {
+    window.server.load(successLoad);
+  };
 
+  window.pin = {
+    loadData: loadData,
+    removePins: removePins
+  };
+})();
