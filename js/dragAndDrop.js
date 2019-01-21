@@ -5,6 +5,9 @@
   var PIC_HEIGHT_MAIN = 84;
   var PIC_MAIN_COORDINATE_Y_MIN = 130;
   var PIC_MAIN_COORDINATE_Y_MAX = 630;
+  var START_MAP_PIN_MAIN_X = 570;
+  var START_MAP_PIN_MAIN_Y = 375;
+
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapOverlay = document.querySelector('.map__overlay');
 
@@ -81,4 +84,17 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var setStartMapPinMain = function () {
+    mapPinMain.style.top = START_MAP_PIN_MAIN_Y + 'px';
+    mapPinMain.style.left = START_MAP_PIN_MAIN_X + 'px';
+    window.form.addressNotice.setAttribute(
+        'value',
+        START_MAP_PIN_MAIN_X + ', ' + START_MAP_PIN_MAIN_Y
+    );
+  };
+
+  window.dragAndDrop = {
+    setStartMapPinMain: setStartMapPinMain
+  };
 })();

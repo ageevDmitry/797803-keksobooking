@@ -14,6 +14,7 @@
   var addressNotice = document.querySelector('#address');
   var adFormFeatures = adForm.querySelector('.features');
   var adFormSubmit = adForm.querySelector('.ad-form__element--submit');
+  var capacityInput = adForm.querySelector('#capacity');
   var capacityInputNew = document.querySelectorAll('#capacity option');
 
   var typeMap = {
@@ -53,6 +54,7 @@
   };
 
   var validRoomsCapacity = function (valueInput) {
+
     var rooms = {
       1: [2, 3, 0],
       2: [3, 0],
@@ -79,7 +81,7 @@
     timeInNotice.value = evt.target.value;
   });
 
-  document.querySelector('#room_number').addEventListener('change', function (evt) {
+  document.querySelector('#room_number').addEventListener('click', function (evt) {
     capacityInputNew.forEach(function (Item) {
       Item.disabled = false;
     });
@@ -101,6 +103,7 @@
     addressNotice: addressNotice,
     adFormFeatures: adFormFeatures,
     adFormSubmit: adFormSubmit,
+    capacityInput: capacityInput
   };
 })();
 

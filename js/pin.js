@@ -59,21 +59,36 @@
 
   var sortPics = function (typePins, typePrice) {
     var filteredPins = [];
+    var filteredTypePins = null;
+    var filteredPricePins = null;
+
     if (typePins && typePins !== 'any') {
-      filteredPins = loadedAppartments.filter(function (it) {
+      filteredTypePins = loadedAppartments.filter(function (it) {
         return it.offer.type === typePins;
       });
     } else if (typePins === 'any') {
-      filteredPins = loadedAppartments;
+      filteredTypePins = loadedAppartments;
     }
 
-    if (typePrice) {
-      if (typePrice === 'low') {
-        filteredPins = loadedAppartments.filter(function (it) {
-          return it.offer.price < 10000;
-        });
-      }
+    if (typePrice && typePrice === 'low') {
+      filteredPricePins = loadedAppartments.filter(function (it) {
+        return it.offer.price < 10000;
+      });
+    } else if (typePrice && typePrice === 'middle') {
+      filteredPricePins = loadedAppartments.filter(function (it) {
+        return it.offer.price < 10000 < 50000;
+      });
+    } else if (typePrice && typePrice === 'high') {
+      filteredPricePins = loadedAppartments.filter(function (it) {
+        return it.offer.price > 50000;
+      });
+    } else if (typePrice === 'any') {
+      filteredPricePins = loadedAppartments;
     }
+
+    var arr = filteredTypePins.concat(filteredPricePins);
+
+    filteredPins = arr.slice(0);
 
     removePins();
     renderPins(filteredPins.slice(0, MAX_QUANTITY_PICS));
