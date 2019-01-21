@@ -16,6 +16,7 @@
   var adFormSubmit = adForm.querySelector('.ad-form__element--submit');
   var capacityInput = adForm.querySelector('#capacity');
   var capacityInputNew = document.querySelectorAll('#capacity option');
+  var adFormReset = adForm.querySelector('.ad-form__reset');
 
   var typeMap = {
     bungalo: 0,
@@ -93,6 +94,10 @@
     window.server.save(new FormData(adForm),
         window.serverMessage.rendSuccessMessage,
         window.serverMessage.rendErrorMessage);
+  });
+
+  adFormReset.addEventListener('click', function () {
+    window.utils.disableWindow();
   });
 
   document.addEventListener('DOMContentLoaded', ready);

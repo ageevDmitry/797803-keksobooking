@@ -8,7 +8,7 @@
   var similarPicTemplate = document.querySelector('#pin').content;
   var loadedAppartments = [];
 
-  var renderPic = function (apartment) {
+  var renderPin = function (apartment) {
     var picElement = similarPicTemplate.cloneNode(true);
     var button = picElement.querySelector('button');
 
@@ -51,44 +51,38 @@
     var fragmentPic = document.createDocumentFragment();
     var limitedSamePins = arrPics.slice(0, MAX_QUANTITY_PICS);
     limitedSamePins.forEach(function (pin) {
-      fragmentPic.appendChild(renderPic(pin));
+      fragmentPic.appendChild(renderPin(pin));
     });
 
     similarPicElement.appendChild(fragmentPic);
   };
 
-  var sortPics = function (typePins, typePrice) {
+  var sortPins = function (typePins) {
     var filteredPins = [];
-    var filteredTypePins = null;
-    var filteredPricePins = null;
 
     if (typePins && typePins !== 'any') {
-      filteredTypePins = loadedAppartments.filter(function (it) {
+      filteredPins = loadedAppartments.filter(function (it) {
         return it.offer.type === typePins;
       });
     } else if (typePins === 'any') {
-      filteredTypePins = loadedAppartments;
+      filteredPins = loadedAppartments;
     }
 
-    if (typePrice && typePrice === 'low') {
-      filteredPricePins = loadedAppartments.filter(function (it) {
-        return it.offer.price < 10000;
-      });
-    } else if (typePrice && typePrice === 'middle') {
-      filteredPricePins = loadedAppartments.filter(function (it) {
-        return it.offer.price < 10000 < 50000;
-      });
-    } else if (typePrice && typePrice === 'high') {
-      filteredPricePins = loadedAppartments.filter(function (it) {
-        return it.offer.price > 50000;
-      });
-    } else if (typePrice === 'any') {
-      filteredPricePins = loadedAppartments;
-    }
-
-    var arr = filteredTypePins.concat(filteredPricePins);
-
-    filteredPins = arr.slice(0);
+    // if (typePrice && typePrice === 'low') {
+    //   filteredPins = loadedAppartments.filter(function (it) {
+    //     return it.offer.price < 10000;
+    //   });
+    // } else if (typePrice && typePrice === 'middle') {
+    //   filteredPins = loadedAppartments.filter(function (it) {
+    //     return it.offer.price < 50000;
+    //   });
+    // } else if (typePrice && typePrice === 'high') {
+    //   filteredPins = loadedAppartments.filter(function (it) {
+    //     return it.offer.price > 50000;
+    //   });
+    // } else if (typePrice === 'any') {
+    //   filteredPins = loadedAppartments;
+    // }
 
     removePins();
     renderPins(filteredPins.slice(0, MAX_QUANTITY_PICS));
@@ -96,12 +90,12 @@
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
     var typeHouse = evt.target.value;
-    sortPics(typeHouse, null);
+    sortPins(typeHouse);
   });
 
   document.querySelector('#housing-price').addEventListener('change', function (evt) {
     var typePrice = evt.target.value;
-    sortPics(null, typePrice);
+    sortPins(typePrice);
   });
 
   var successLoad = function (data) {

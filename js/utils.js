@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var CAPACITY_INPUT_DEFAULT = '1';
   var userDialog = document.querySelector('.map');
   var windowDisabled = true;
 
@@ -14,7 +15,7 @@
       selector.removeAttribute('disabled');
     });
     window.utils.windowDisabled = false;
-    window.form.capacityInput.value = '1';
+    window.form.capacityInput.value = CAPACITY_INPUT_DEFAULT;
   };
 
   var disableWindow = function () {
@@ -28,6 +29,7 @@
       selector.setAttribute('disabled', 'disabled');
     });
     window.dragAndDrop.setStartMapPinMain();
+    window.pin.removePins();
     window.utils.windowDisabled = true;
   };
 
