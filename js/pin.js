@@ -7,6 +7,7 @@
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
   var loadedAppartments = [];
+  var adFormElement = document.querySelector('.ad-form__element');
 
   var renderPin = function (apartment) {
     var picElement = similarPicTemplate.cloneNode(true);
@@ -57,45 +58,52 @@
     similarPicElement.appendChild(fragmentPic);
   };
 
-  var sortPins = function (typePins) {
-    var filteredPins = [];
+  // var filterPins = function (typePins, roomsPins) {
+  //   var typePinsSort = 'house';
+  //   var roomsPinsSort = '2';
 
-    if (typePins && typePins !== 'any') {
-      filteredPins = loadedAppartments.filter(function (it) {
-        return it.offer.type === typePins;
-      });
-    } else if (typePins === 'any') {
-      filteredPins = loadedAppartments;
-    }
+  //   var filteredPins = loadedAppartments.filter(function (it) {
+  //     var result = true;
 
-    // if (typePrice && typePrice === 'low') {
-    //   filteredPins = loadedAppartments.filter(function (it) {
-    //     return it.offer.price < 10000;
-    //   });
-    // } else if (typePrice && typePrice === 'middle') {
-    //   filteredPins = loadedAppartments.filter(function (it) {
-    //     return it.offer.price < 50000;
-    //   });
-    // } else if (typePrice && typePrice === 'high') {
-    //   filteredPins = loadedAppartments.filter(function (it) {
-    //     return it.offer.price > 50000;
-    //   });
-    // } else if (typePrice === 'any') {
-    //   filteredPins = loadedAppartments;
-    // }
+  //     if (it.offer.type !== typePinsSort) {
+  //       result = false;
+  //     }
 
-    removePins();
-    renderPins(filteredPins.slice(0, MAX_QUANTITY_PICS));
-  };
+  //     if (it.offer.rooms !== roomsPinsSort) {
+  //       result = false;
+  //     }
+  //     return result;
+  //   });
+
+
+  // if (typePrice && typePrice === 'low') {
+  //   filteredPins = loadedAppartments.filter(function (it) {
+  //     return it.offer.price < 10000;
+  //   });
+  // } else if (typePrice && typePrice === 'middle') {
+  //   filteredPins = loadedAppartments.filter(function (it) {
+  //     return it.offer.price < 50000;
+  //   });
+  // } else if (typePrice && typePrice === 'high') {
+  //   filteredPins = loadedAppartments.filter(function (it) {
+  //     return it.offer.price > 50000;
+  //   });
+  // } else if (typePrice === 'any') {
+  //   filteredPins = loadedAppartments;
+  // }
+
+  //   removePins();
+  //   renderPins(filteredPins.slice(0, MAX_QUANTITY_PICS));
+  // };
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
     var typeHouse = evt.target.value;
-    sortPins(typeHouse);
+    filterPins(typeHouse, null);
   });
 
-  document.querySelector('#housing-price').addEventListener('change', function (evt) {
-    var typePrice = evt.target.value;
-    sortPins(typePrice);
+  document.querySelector('#housing-rooms').addEventListener('click', function (evt) {
+    var roomsHouse = evt.target.value;
+    filterPins(null, roomsHouse);
   });
 
   var successLoad = function (data) {
@@ -106,6 +114,27 @@
   var loadData = function () {
     window.server.load(successLoad);
   };
+
+  var filterPins = function () {
+    var typePinsSort = 'house';
+    // var roomsPinsSort = '2';
+
+    var filteredPins = loadedAppartments.filter(function (it) {
+      var result = true;
+
+      if (it.offer.type !== typePinsSort) {
+        result = false;
+      }
+
+      // if (it.offer.rooms !== roomsPinsSort) {
+      //   result = false;
+      // }
+      return result;
+    });
+    console.log(filteredPins);
+  };
+
+  filterPins();
 
   window.pin = {
     loadData: loadData,
