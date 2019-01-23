@@ -68,7 +68,7 @@
     var filteredPins = loadedAppartments.filter(function (it) {
       var result = true;
 
-      if (it.offer.type !== typeApartment || it.offer.rooms !== quantityRoomsApartment) {
+      if (it.offer.type !== typeApartment) {
         result = false;
       }
 
@@ -113,18 +113,18 @@
 
   document.querySelector('#housing-type').addEventListener('change', function (evt) {
     typeApartment = evt.target.value;
-    filterPins();
+    window.debounce(filterPins);
   });
 
-  document.querySelector('#housing-rooms').addEventListener('change', function (evt) {
-    quantityRoomsApartment = Number(evt.target.value);
-    filterPins();
-  });
+  // document.querySelector('#housing-rooms').addEventListener('change', function (evt) {
+  //   quantityRoomsApartment = Number(evt.target.value);
+  //   filterPins();
+  // });
 
-  document.querySelector('#housing-guests').addEventListener('change', function (evt) {
-    quantityGuestsApartment = Number(evt.target.value);
-    filterPins();
-  });
+  // document.querySelector('#housing-guests').addEventListener('change', function (evt) {
+  //   quantityGuestsApartment = Number(evt.target.value);
+  //   filterPins();
+  // });
 
   var successLoad = function (data) {
     loadedAppartments = data.slice(0);
