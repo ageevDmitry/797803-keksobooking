@@ -29,7 +29,7 @@
         apartments.offer.type
     );
     mapElement.querySelector('.popup__text--capacity').textContent =
-      apartments.offer.rooms + ' комнаты для ' + apartments.offer.guests + ' гостей';
+      apartments.offer.rooms + ' комнат для ' + apartments.offer.guests + ' гостей';
     mapElement.querySelector('.popup__text--time').textContent =
       'Заезд после ' + apartments.offer.checkin + ', выезд до ' + apartments.offer.checkout;
     mapElement.querySelector('.popup__description').textContent = apartments.offer.description;

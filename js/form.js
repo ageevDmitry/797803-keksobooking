@@ -17,7 +17,7 @@
   var capacityInput = adForm.querySelector('#capacity');
   var capacityInputNew = document.querySelectorAll('#capacity option');
   var adFormReset = adForm.querySelector('.ad-form__reset');
-  var roomNumber = adForm.querySelector('#room_number');
+  // var roomNumber = adForm.querySelector('#room_number');
 
   var typeMap = {
     bungalo: 0,
