@@ -19,6 +19,7 @@
   };
 
   var renderPopup = function (apartments) {
+
     var mapElement = similarMapTemplate.cloneNode(true);
 
     mapElement.querySelector('.popup__avatar').setAttribute('src', apartments.author.avatar);
@@ -86,6 +87,7 @@
 
     document.addEventListener('keydown', closeEscPopup, {once: true});
     return mapElement;
+
   };
 
   var closeEscPopup = function (e) {
@@ -96,7 +98,9 @@
 
   var closePopup = function () {
     var articlePopup = document.querySelector('article');
-    parentMapElement.removeChild(articlePopup);
+    if (articlePopup) {
+      parentMapElement.removeChild(articlePopup);
+    }
   };
 
   var fragmentMap = document.createDocumentFragment();

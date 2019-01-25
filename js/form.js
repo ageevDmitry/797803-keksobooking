@@ -56,7 +56,6 @@
   };
 
   var validRoomsCapacity = function (valueInput) {
-
     var rooms = {
       1: [2, 3, 0],
       2: [3, 0],
@@ -66,11 +65,16 @@
 
     var disabled = rooms[valueInput];
 
-    capacityInputNew.forEach(function (Item) {
-      if (disabled.includes(parseInt(Item.value, 10))) {
-        Item.disabled = true;
+    var activeOptionIndex = 0;
+    capacityInputNew.forEach(function (item, i) {
+      if (disabled.includes(parseInt(item.value, 10))) {
+        item.disabled = true;
+        item.selected = false;
+      } else {
+        activeOptionIndex = i;
       }
     });
+    capacityInputNew[activeOptionIndex].selected = true;
   };
 
   document.querySelector('#type').addEventListener('change', onTypeChange);
@@ -83,7 +87,7 @@
     timeInNotice.value = evt.target.value;
   });
 
-  document.querySelector('#room_number').addEventListener('click', function (evt) {
+  document.querySelector('#room_number').addEventListener('change', function (evt) {
     capacityInputNew.forEach(function (Item) {
       Item.disabled = false;
     });
@@ -92,9 +96,11 @@
 
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.server.save(new FormData(adForm),
+    window.server.save(
+        new FormData(adForm),
         window.serverMessage.rendSuccessMessage,
-        window.serverMessage.rendErrorMessage);
+        window.serverMessage.rendErrorMessage
+    );
   });
 
   adFormReset.addEventListener('click', function () {
@@ -109,7 +115,6 @@
     addressNotice: addressNotice,
     adFormFeatures: adFormFeatures,
     adFormSubmit: adFormSubmit,
-    capacityInput: capacityInput
+    capacityInput: capacityInput,
   };
 })();
-
