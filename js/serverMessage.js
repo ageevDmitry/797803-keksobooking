@@ -1,54 +1,66 @@
 'use strict';
 
 (function () {
-
-  var adForm = document.querySelector('.ad-form');
   var ESC_KEYCODE = 27;
 
-  var closeServerMessage = function (classMessage) {
-    adForm.removeChild(classMessage);
+  var closeErrorMessage = function () {
+    var errorMessageClass = document.querySelector('.error');
+    window.form.adForm.removeChild(errorMessageClass);
+    document.removeEventListener('click', onClickErrorMessage);
+    document.removeEventListener('keydown', onKeyDownErrorMesssage);
+  };
+
+  var onClickErrorMessage = function () {
+    closeErrorMessage();
+  };
+
+  var onKeyDownErrorMesssage = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeErrorMessage();
+    }
+  };
+
+  var closeSuccessMessage = function () {
+    var successMessageClass = document.querySelector('.success');
+    window.form.adForm.removeChild(successMessageClass);
+    document.removeEventListener('click', onClickSuccessMessage);
+    document.removeEventListener('keydown', onKeySuccessMessage);
+  };
+
+  var onClickSuccessMessage = function () {
+    closeSuccessMessage();
+  };
+
+  var onKeySuccessMessage = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeSuccessMessage();
+    }
   };
 
   window.serverMessage = {
-
     rendSuccessMessage: function () {
-
-      var successMessageContent = document.querySelector('#success').content;
-      adForm.appendChild(successMessageContent);
-      var successMessageClass = document.querySelector('.success');
+      var successMessageContent = document.querySelector('#success').cloneNode(true).content;
+      window.form.adForm.appendChild(successMessageContent);
       window.utils.disableWindow();
       window.pin.removePins();
 
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === ESC_KEYCODE) {
-          closeServerMessage(successMessageClass);
-        }
-      }, {once: true});
-
-      document.addEventListener('click', function () {
-        closeServerMessage(successMessageClass);
-      }, {once: true});
+      document.addEventListener('keydown', onKeySuccessMessage);
+      document.addEventListener('click', onClickSuccessMessage);
     },
 
     rendErrorMessage: function () {
+      var error = document.querySelector('#error').cloneNode(true).content;
+      window.form.adForm.appendChild(error);
 
-      var error = document.querySelector('#error').content;
-      adForm.appendChild(error);
-      var errorMessageClass = document.querySelector('.error');
-
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === ESC_KEYCODE) {
-          closeServerMessage(errorMessageClass);
-        }
-      }, {once: true});
-
-      document.addEventListener('click', function () {
-        closeServerMessage(errorMessageClass);
-      }, {once: true});
-
-      document.querySelector('.error_button').querySelector('click', function () {
-        closeServerMessage(errorMessageClass);
-      }, {once: true});
-    }
+      document.addEventListener('keydown', onKeyDownErrorMesssage);
+      document.addEventListener('click', onClickErrorMessage);
+      document.querySelector('.error__button').querySelector(
+          'click',
+          function () {
+            closeErrorMessage();
+          },
+          {once: true}
+      );
+    },
   };
 })();

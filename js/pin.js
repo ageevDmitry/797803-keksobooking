@@ -8,6 +8,11 @@
   var MAX_QUANTITY_PICS = 5;
   var similarPicElement = document.querySelector('.map__pins');
   var similarPicTemplate = document.querySelector('#pin').content;
+  var housingType = document.querySelector('#housing-type');
+  var housingPrice = document.querySelector('#housing-price');
+  var housingRooms = document.querySelector('#housing-rooms');
+  var housingGuests = document.querySelector('#housing-guests');
+  var housingFeatures = document.querySelectorAll('.map__checkbox');
   var loadedAppartments = [];
   var renederedPins = [];
 
@@ -143,27 +148,27 @@
     renderPins(renederedPins);
   };
 
-  document.querySelector('#housing-type').addEventListener('change', function (evt) {
+  housingType.addEventListener('change', function (evt) {
     filterMap.type = evt.target.value;
     window.debounce(filterAll());
   });
 
-  document.querySelector('#housing-price').addEventListener('change', function (evt) {
+  housingPrice.addEventListener('change', function (evt) {
     filterMap.price = evt.target.value;
     window.debounce(filterAll());
   });
 
-  document.querySelector('#housing-rooms').addEventListener('change', function (evt) {
+  housingRooms.addEventListener('change', function (evt) {
     filterMap.rooms = Number(evt.target.value);
     window.debounce(filterAll());
   });
 
-  document.querySelector('#housing-guests').addEventListener('change', function (evt) {
+  housingGuests.addEventListener('change', function (evt) {
     filterMap.guests = evt.target.value;
     window.debounce(filterAll());
   });
 
-  document.querySelectorAll('.map__checkbox ').forEach(function (input) {
+  housingFeatures.forEach(function (input) {
     input.addEventListener('change', function () {
       var featuresElements = [];
       document.querySelectorAll('.map__checkbox:checked').forEach(function (featureElement) {
@@ -185,11 +190,16 @@
   };
 
   var loadData = function () {
-    window.server.load(successLoad);
+    window.server.load(successLoad, window.serverMessage.rendErrorMessage);
   };
 
   window.pin = {
     loadData: loadData,
     removePins: removePins,
+    housingType: housingType,
+    housingPrice: housingPrice,
+    housingRooms: housingRooms,
+    housingGuests: housingGuests,
+    housingFeatures: housingFeatures
   };
 })();

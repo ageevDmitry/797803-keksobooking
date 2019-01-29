@@ -17,7 +17,8 @@
   var capacityInput = adForm.querySelector('#capacity');
   var capacityInputNew = document.querySelectorAll('#capacity option');
   var adFormReset = adForm.querySelector('.ad-form__reset');
-  // var roomNumber = adForm.querySelector('#room_number');
+  var typeNotice = document.querySelector('#type');
+  var roomNumber = document.querySelector('#room_number');
 
   var typeMap = {
     bungalo: 0,
@@ -43,8 +44,8 @@
       selector.setAttribute('disabled', 'disabled');
     });
 
-    adForm.querySelector('.ad-form__element--submit').setAttribute('disabled', 'disabled');
-    adForm.querySelector('.features').setAttribute('disabled', 'disabled');
+    adFormSubmit.setAttribute('disabled', 'disabled');
+    adFormFeatures.setAttribute('disabled', 'disabled');
     titleNotice.setAttribute('required', 'required');
     titleNotice.setAttribute('minlength', '30');
     titleNotice.setAttribute('maxlength', '100');
@@ -77,17 +78,17 @@
     capacityInputNew[activeOptionIndex].selected = true;
   };
 
-  document.querySelector('#type').addEventListener('change', onTypeChange);
+  typeNotice.addEventListener('change', onTypeChange);
 
-  document.querySelector('#timein').addEventListener('change', function (evt) {
+  timeInNotice.addEventListener('change', function (evt) {
     timeOutNotice.value = evt.target.value;
   });
 
-  document.querySelector('#timeout').addEventListener('change', function (evt) {
+  timeOutNotice.addEventListener('change', function (evt) {
     timeInNotice.value = evt.target.value;
   });
 
-  document.querySelector('#room_number').addEventListener('change', function (evt) {
+  roomNumber.addEventListener('click', function (evt) {
     capacityInputNew.forEach(function (Item) {
       Item.disabled = false;
     });
@@ -116,5 +117,11 @@
     adFormFeatures: adFormFeatures,
     adFormSubmit: adFormSubmit,
     capacityInput: capacityInput,
+    titleNotice: titleNotice,
+    priceNotice: priceNotice,
+    timeInNotice: timeInNotice,
+    timeOutNotice: timeOutNotice,
+    typeNotice: typeNotice,
+    roomNumber: roomNumber
   };
 })();

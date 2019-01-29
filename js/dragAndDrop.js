@@ -3,8 +3,8 @@
 (function () {
   var PIC_WIDTH_MAIN = 64;
   var PIC_HEIGHT_MAIN = 84;
-  var PIC_MAIN_COORDINATE_Y_MIN = 130;
-  var PIC_MAIN_COORDINATE_Y_MAX = 630;
+  var PIC_MAIN_COORDINATE_Y_MIN = 90;
+  var PIC_MAIN_COORDINATE_Y_MAX = 625;
   var START_MAP_PIN_MAIN_X = 570;
   var START_MAP_PIN_MAIN_Y = 375;
 
@@ -27,9 +27,9 @@
       moveEvt.preventDefault();
       dragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY,
+      var Shift = {
+        X: startCoords.x - moveEvt.clientX,
+        Y: startCoords.y - moveEvt.clientY,
       };
 
       startCoords = {
@@ -37,8 +37,8 @@
         y: moveEvt.clientY,
       };
 
-      var mapPinMainTop = mapPinMain.offsetTop - shift.y;
-      var mapPinMainLeft = mapPinMain.offsetLeft - shift.x;
+      var mapPinMainTop = mapPinMain.offsetTop - Shift.Y;
+      var mapPinMainLeft = mapPinMain.offsetLeft - Shift.X;
 
       if (mapPinMainTop < PIC_MAIN_COORDINATE_Y_MIN) {
         mapPinMainTop = PIC_MAIN_COORDINATE_Y_MIN;
@@ -95,6 +95,6 @@
   };
 
   window.dragAndDrop = {
-    setStartMapPinMain: setStartMapPinMain
+    setStartPosition: setStartMapPinMain
   };
 })();
