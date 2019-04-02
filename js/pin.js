@@ -137,7 +137,7 @@
     features: [],
   };
 
-  var filterAll = function () {
+  var filterAll = window.debounce(function () {
     renederedPins = loadedAppartments.slice(0);
     filterTypePins();
     filterPricePins();
@@ -146,26 +146,26 @@
     filterFeaturesPins();
     removePins();
     renderPins(renederedPins);
-  };
+  });
 
   housingType.addEventListener('change', function (evt) {
     filterMap.type = evt.target.value;
-    window.debounce(filterAll());
+    filterAll();
   });
 
   housingPrice.addEventListener('change', function (evt) {
     filterMap.price = evt.target.value;
-    window.debounce(filterAll());
+    filterAll();
   });
 
   housingRooms.addEventListener('change', function (evt) {
     filterMap.rooms = Number(evt.target.value);
-    window.debounce(filterAll());
+    filterAll();
   });
 
   housingGuests.addEventListener('change', function (evt) {
     filterMap.guests = evt.target.value;
-    window.debounce(filterAll());
+    filterAll();
   });
 
   housingFeatures.forEach(function (input) {
@@ -176,7 +176,7 @@
       });
 
       filterMap.features = featuresElements;
-      window.debounce(filterAll());
+      filterAll();
     });
   });
 
